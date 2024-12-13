@@ -11,3 +11,18 @@ export const signupUser = async (userData) => {
         throw error; // Pass the error to the component
     }
 };
+
+// Login service
+export const loginUser = async (userData) => {
+    try {
+        const response = await axios.get(`${API_URL}/login`, {
+            params: {
+                email: userData.email,
+                password: userData.password,
+            },
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

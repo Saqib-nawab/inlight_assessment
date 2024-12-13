@@ -33,31 +33,42 @@ const signup = async (req, res) => {
 
 // Login Controller
 const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password } = req.query;
 
     if (!email || !password) {
         return res.status(400).json({ message: "Email and password are required" });
     }
 
     try {
-        // Find user by email
         const user = await findUserByEmail(email);
         if (!user) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        // Compare the provided password with the stored hashed password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        res.status(200).json({ message: "Login successful", user: { id: user.user_id, email: user.email } });
+        // Save user info in session
+        req.session.user = {
+            id: user.user_id,
+            firstName: user.first_name,
+            lastName: user.last_name,
+            email: user.email,
+        };
+
+        res.status(200).json({
+            message: "Login successful",
+            user: req.session.user,
+        });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+
 
 module.exports = {
     signup,

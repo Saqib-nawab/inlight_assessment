@@ -2,9 +2,10 @@ const pool = require("../config/db"); // PostgreSQL connection
 
 // Function to check if a user exists by email
 const findUserByEmail = async (email) => {
-    const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-    return result.rows[0];
+    const result = await pool.query("SELECT user_id, first_name, last_name, email, password FROM users WHERE email = $1", [email]);
+    return result.rows[0]; // Return the user object
 };
+
 
 // Function to create a new user
 const createUser = async (userId, firstName, lastName, email, hashedPassword) => {

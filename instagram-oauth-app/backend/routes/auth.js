@@ -7,6 +7,15 @@ const router = express.Router();
 router.post("/signup", signup);
 
 // Login route
-router.post("/login", login);
+router.get("/login", login);
+
+router.get("/session", (req, res) => {
+    if (req.session.user) {
+        res.status(200).json({ user: req.session.user });
+    } else {
+        res.status(401).json({ message: "No active session" });
+    }
+});
+
 
 module.exports = router;

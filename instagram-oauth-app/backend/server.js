@@ -1,17 +1,27 @@
 const express = require("express");
+const session = require("express-session");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-const pool = require("./config/db"); // Import the PostgreSQL connection
-const authRoutes = require("./routes/auth"); // Import the auth routes
+const authRoutes = require("./routes/auth");
 
 dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enable CORS for frontend
 app.use(bodyParser.json());
+
+// Configure session middleware
+app.use(
+    session({
+        secret: process.env.secret_key, // Use the secret key from the .env file
+        resave: false,
+        saveUninitialized: true,
+        cookie: { secure: false, httpOnly: true }, // Set `secure: true` in production if using HTTPS
+    })
+);
 
 // Routes
 app.use("/auth", authRoutes);
