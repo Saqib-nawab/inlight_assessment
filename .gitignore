@@ -4,8 +4,8 @@ logs
 npm-debug.log*
 
 # Node.js dependencies
-/backend/node_modules/
-/frontend/node_modules/
+backend/node_modules/
+frontend/node_modules/
 
 node_modules/
 
