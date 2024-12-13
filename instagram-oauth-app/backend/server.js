@@ -9,21 +9,22 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
 app.use(cors({ origin: "http://localhost:3000", credentials: true })); // Enable CORS for frontend
 app.use(bodyParser.json());
 
-// Configure session middleware
 app.use(
     session({
-        secret: process.env.secret_key, // Use the secret key from the .env file
+        secret: "inLights",
         resave: false,
         saveUninitialized: true,
-        cookie: { secure: false, httpOnly: true }, // Set `secure: true` in production if using HTTPS
+        cookie: {
+            secure: false, // Use true if HTTPS is enabled
+            httpOnly: true,
+        },
     })
 );
 
-// Routes
+
 app.use("/auth", authRoutes);
 
 app.get("/", (req, res) => {
