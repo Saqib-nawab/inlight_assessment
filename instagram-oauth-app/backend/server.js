@@ -5,6 +5,9 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
 
+const authLinkedin = require("./routes/authLinkedin"); // Import LinkedIn routes
+
+
 dotenv.config();
 
 const app = express();
@@ -28,6 +31,7 @@ app.use(
 
 
 app.use("/auth", authRoutes);
+app.use("/auth/linkedin", authLinkedin); // Use LinkedIn routes
 
 app.get("/", (req, res) => {
     res.send("Backend is running!");

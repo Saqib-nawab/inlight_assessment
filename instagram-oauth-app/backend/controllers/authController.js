@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcrypt");
 const { findUserByEmail, createUser } = require("../models/userModel");
+const jwt = require("jsonwebtoken");
 
 // Signup Controller
 const signup = async (req, res) => {
@@ -32,6 +33,58 @@ const signup = async (req, res) => {
 };
 
 // Login Controller
+// const login = async (req, res) => {
+//     const { email, password } = req.query;
+
+//     if (!email || !password) {
+//         return res.status(400).json({ message: "Email and password are required" });
+//     }
+
+//     try {
+//         const user = await findUserByEmail(email);
+//         if (!user) {
+//             return res.status(400).json({ message: "Invalid email or password" });
+//         }
+
+//         const isMatch = await bcrypt.compare(password, user.password);
+//         if (!isMatch) {
+//             return res.status(400).json({ message: "Invalid email or password" });
+//         }
+
+//         // Save user info in session
+//         req.session.user = {
+//             id: user.user_id,
+//             firstName: user.first_name,
+//             lastName: user.last_name,
+//             email: user.email,
+//         };
+
+//         console.log("Session after setting user:", req.session);
+//         // res.status(200).json({
+//         //     message: "Login successful",
+//         //     user: req.session.user,
+//         // });
+
+//         // Explicitly save the session
+//         req.session.save((err) => {
+//             if (err) {
+//                 console.error("Error saving session:", err);
+//                 return res.status(500).json({ message: "Internal server error" });
+//             }
+//             console.log("Session after saving:", req.session);
+
+//             res.status(200).json({
+//                 message: "Login successful",
+//                 user: req.session.user,
+//             });
+//         });
+//     } catch (err) {
+//         console.error("Error during login:", err);
+//         res.status(500).json({ message: "Internal server error" });
+//     }
+// };
+
+
 const login = async (req, res) => {
     const { email, password } = req.query;
 
@@ -50,40 +103,27 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
-        // Save user info in session
-        req.session.user = {
-            id: user.user_id,
-            firstName: user.first_name,
-            lastName: user.last_name,
-            email: user.email,
-        };
+        // Generate a JWT
+        const token = jwt.sign(
+            {
+                id: user.user_id,
+                firstName: user.first_name,
+                lastName: user.last_name,
+                email: user.email,
+            },
+            process.env.JWT_SECRET || "default-secret", // Use a strong secret key
+            { expiresIn: "1h" } // Token expiry (optional)
+        );
 
-        console.log("Session after setting user:", req.session);
-        // res.status(200).json({
-        //     message: "Login successful",
-        //     user: req.session.user,
-        // });
-
-        // Explicitly save the session
-        req.session.save((err) => {
-            if (err) {
-                console.error("Error saving session:", err);
-                return res.status(500).json({ message: "Internal server error" });
-            }
-            console.log("Session after saving:", req.session);
-
-            res.status(200).json({
-                message: "Login successful",
-                user: req.session.user,
-            });
+        res.status(200).json({
+            message: "Login successful",
+            token, // Return the JWT
         });
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Internal server error" });
     }
 };
-
-
 
 module.exports = {
     signup,
