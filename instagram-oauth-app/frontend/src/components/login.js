@@ -2,7 +2,7 @@ import React from "react";
 
 const Login = () => {
     const handleLogin = () => {
-        // Replace with your backend endpoint for Instagram OAuth
+        // backend endpoint for Instagram OAuth
         window.location.href = "http://localhost:5000/auth/instagram";
     };
 
