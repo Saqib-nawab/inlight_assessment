@@ -10,15 +10,18 @@ router.post("/signup", signup);
 router.get("/login", login);
 
 router.get("/session", (req, res) => {
-    console.log("Session data in backend:", req.session);
-    if (req.session.user) {
-        console.log("User session exists:", req.session.user);
+    console.log("Session route hit");
+    console.log("Session data on request:", req.session);
+
+    if (req.session && req.session.user) {
+        console.log("User session exists:", req.session);
         res.status(200).json({ user: req.session.user });
     } else {
-        console.log("No active session");
+        console.log("No active session found.");
         res.status(401).json({ message: "No active session" });
     }
 });
+
 
 
 

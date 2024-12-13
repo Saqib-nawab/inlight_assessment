@@ -20,6 +20,8 @@ app.use(
         cookie: {
             secure: false, // Use true if HTTPS is enabled
             httpOnly: true,
+            sameSite: "lax",
+            maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
         },
     })
 );

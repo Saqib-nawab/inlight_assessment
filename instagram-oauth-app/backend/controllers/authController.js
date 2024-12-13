@@ -58,9 +58,24 @@ const login = async (req, res) => {
             email: user.email,
         };
 
-        res.status(200).json({
-            message: "Login successful",
-            user: req.session.user,
+        console.log("Session after setting user:", req.session);
+        // res.status(200).json({
+        //     message: "Login successful",
+        //     user: req.session.user,
+        // });
+
+        // Explicitly save the session
+        req.session.save((err) => {
+            if (err) {
+                console.error("Error saving session:", err);
+                return res.status(500).json({ message: "Internal server error" });
+            }
+            console.log("Session after saving:", req.session);
+
+            res.status(200).json({
+                message: "Login successful",
+                user: req.session.user,
+            });
         });
     } catch (err) {
         console.error("Error during login:", err);

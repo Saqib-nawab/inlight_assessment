@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
+
+console.log("DashboardPlus component rendered");
+
 const DashboardPlus = () => {
     const [user, setUser] = useState(null); // Store user data
     const [message, setMessage] = useState(""); // Store message to display
 
     useEffect(() => {
+        console.log("useAffect");
         const fetchSession = async () => {
             try {
                 const response = await axios.get("http://localhost:5000/auth/session", {
@@ -38,7 +42,7 @@ const DashboardPlus = () => {
     // Show user details if user exists
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h1>Welcome, {user.firstName}!</h1>
+            <h1>Welcome, {user}!</h1>
             <p>Welcome to inLights.</p>
         </div>
     );
