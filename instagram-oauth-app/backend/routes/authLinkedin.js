@@ -71,9 +71,11 @@ passport.deserializeUser((user, cb) => {
 
 router.get(
     '/authentication/linkedin',
-    passport.authenticate('linkedin', { state: true }),
-    function (req, res) {
-    }
+    (req, res, next) => {
+        console.log('LinkedIn authentication triggered');
+        next();
+    },
+    passport.authenticate('linkedin', { state: true })
 );
 
 // LinkedIn Callback Route
@@ -113,6 +115,7 @@ router.post('/callback', async (req, res) => {
 
         const token = tokenResponse.data.access_token;
         console.log('LinkedIn Access Token:', token);
+
         console.log('User:', req.user);
         res.status(200).json({
             token,

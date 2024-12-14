@@ -39,7 +39,7 @@ app.use(passport.session());
 
 // 5. Routes
 app.use("/auth", authRoutes);
-app.use("/", authLinkedin); // LinkedIn routes
+app.use("/", authLinkedin); // Use a specific path for LinkedIn routes
 
 // 6. Default Route
 app.get("/", (req, res) => {
