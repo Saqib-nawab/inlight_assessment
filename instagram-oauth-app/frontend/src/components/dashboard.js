@@ -6,9 +6,8 @@ const Dashboard = () => {
 
     const handleLinkedInLogin = () => {
         // Correct LinkedIn authentication route
-        window.location.href = "http://localhost:5000/auth/linkedin/authentication/linkedin";
+        window.location.href = "http://localhost:5000/authentication/linkedin";
     };
-
 
     return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>

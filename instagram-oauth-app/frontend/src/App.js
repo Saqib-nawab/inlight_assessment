@@ -5,6 +5,7 @@ import DashboardPlus from "./components/dashboardPlus";
 import Signup from "./components/signup";
 import Login from "./components/login";
 import Posts from "./components/posts";
+import LinkedIn from "./components/linkedin";
 
 const App = () => {
 
@@ -16,6 +17,7 @@ const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/posts" element={<Posts />} />
+        <Route path="/authentication/linkedin/callback" element={<LinkedIn />} />
       </Routes>
     </Router>
   );

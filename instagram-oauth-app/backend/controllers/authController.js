@@ -32,6 +32,29 @@ const signup = async (req, res) => {
     }
 };
 
+const passwordLesssignup = async (newUser) => {
+
+    if (!newUser.email || !newUser.firstName || !newUser.lastName) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    try {
+        // Check if the email is already registered
+        const existingUser = await findUserByEmail(email);
+        if (existingUser) {
+            return res.status(400).json({ message: "Email is already registered" });
+        }
+
+        // Create a new user
+        const userId = uuidv4();
+        const newUser = await createUser(userId, firstName, lastName, email);
+        return newUser;
+    } catch (err) {
+        console.error("Error during signup:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 // Login Controller
 // const login = async (req, res) => {
 //     const { email, password } = req.query;
@@ -119,6 +142,25 @@ const login = async (req, res) => {
             message: "Login successful",
             token, // Return the JWT
         });
+    } catch (err) {
+        console.error("Error during login:", err);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+const passwordlesslogin = async (email) => {
+
+    if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+    }
+
+    try {
+        const user = await findUserByEmail(email);
+        if (!user) {
+            return res.status(400).json({ message: "user doesn't exist" });
+        }
+
+        return user;
     } catch (err) {
         console.error("Error during login:", err);
         res.status(500).json({ message: "Internal server error" });

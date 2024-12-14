@@ -4,7 +4,7 @@ const LinkedInStrategy = require('passport-linkedin-oauth2').Strategy;
 const router = express.Router();
 const axios = require('axios');
 
-const { login, signup } = require('../controllers/authController');
+const { login, signup, passwordlesslogin, passwordLesssignup } = require('../controllers/authController');
 // LinkedIn Strategy
 passport.use(
     new LinkedInStrategy(
@@ -15,11 +15,11 @@ passport.use(
             scope: ['email', 'profile', 'openid'], // Fetch email and profile
         },
         function (accessToken, refreshToken, profile, done) {
+            console.log('linkedin strategy triggered');
             // Asynchronous handling using process.nextTick
             process.nextTick(async function () {
                 try {
                     console.log('LinkedIn Profile:', profile);
-
                     // Extract email if available
                     const email = profile.email;
 
@@ -29,7 +29,7 @@ passport.use(
                     }
 
                     // Check if user exists in the database
-                    let user = await login(email);
+                    let user = await passwordlesslogin(email);
                     if (!user) {
                         console.log('User not found for email:', email);
 
@@ -41,7 +41,7 @@ passport.use(
                         };
 
                         // Save the new user to the database
-                        user = await signup(newUser);
+                        user = await passwordLesssignup(newUser);
                         if (!user) {
                             return done(null, false, { message: 'Failed to create user' });
                         }
@@ -78,10 +78,10 @@ router.get(
 
 // LinkedIn Callback Route
 router.get(
-    '/authentication/linkedin/callback',
+    '/authentication/linkedin/callback', //this url should be equal to the one in frontend which is why the one in frontend is weird
     passport.authenticate('linkedin', {
         failureRedirect: '/login', // Redirect on failure
-        successRedirect: '/', // Redirect on success
+        successRedirect: '/authentication/linkedin/callback', // Redirect on success
         session: true,
     }),
     (req, res) => {
@@ -92,7 +92,7 @@ router.get(
 );
 
 
-router.post('/api/auth/linkedin/callback', async (req, res) => {
+router.post('/callback', async (req, res) => {
     const { code } = req.body;
 
     if (!code) {
@@ -113,6 +113,7 @@ router.post('/api/auth/linkedin/callback', async (req, res) => {
 
         const token = tokenResponse.data.access_token;
         console.log('LinkedIn Access Token:', token);
+        console.log('User:', req.user);
         res.status(200).json({
             token,
             user: req.user

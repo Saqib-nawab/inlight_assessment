@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const DashboardPlus = () => {
     const [user, setUser] = useState(null); // Store user data
     const [message, setMessage] = useState(""); // Store message to display
+    const navigate = useNavigate(); // Use for navigation
 
     console.log("DashboardPlus component rendered");
+
     useEffect(() => {
         console.log("useEffect triggered");
 
@@ -37,7 +40,14 @@ const DashboardPlus = () => {
         };
 
         fetchSession();
-    }, []); // No dependency array so it will run on every render
+    }, []); // Empty dependency array so it only runs on mount
+
+    // Logout handler
+    const handleLogout = () => {
+        localStorage.removeItem("authToken"); // Remove the token
+        setUser(null); // Clear the user state
+        navigate("/login"); // Redirect to login page
+    };
 
     // Show message if no user is present
     if (!user && message) {
@@ -50,17 +60,38 @@ const DashboardPlus = () => {
 
     // Show user details if user exists
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            {user ? (
-                <>
-                    <h1>
-                        Welcome, {user.firstName} {user.lastName}!
-                    </h1>
-                    <p>Welcome to inLights.</p>
-                </>
-            ) : (
-                <p>Loading user data...</p>
-            )}
+        <div>
+            {/* Logout button at top-right */}
+            <div style={{ textAlign: "right", padding: "10px" }}>
+                <button
+                    onClick={handleLogout}
+                    style={{
+                        padding: "8px 16px",
+                        fontSize: "14px",
+                        backgroundColor: "#f44336",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "4px",
+                        cursor: "pointer",
+                    }}
+                >
+                    Logout
+                </button>
+            </div>
+
+            {/* Main content */}
+            <div style={{ textAlign: "center", marginTop: "50px" }}>
+                {user ? (
+                    <>
+                        <h1>
+                            Welcome, {user.firstName} {user.lastName}!
+                        </h1>
+                        <p>Welcome to inLights.</p>
+                    </>
+                ) : (
+                    <p>Loading user data...</p>
+                )}
+            </div>
         </div>
     );
 };
