@@ -4,6 +4,25 @@ We provide automation solutions for multiple industries. Currently working on de
 
 ## Setting up the website
 
+### cloning code
+i expect your developer (kawish) to already know the cloning process so i am aborting it, still if you need to know go about one of the 2 methods.
+
+## generate SSH keys and clone using SSH keys
+
+### for windows
+ run the following command
+
+ ```ssh-keygen -t rsa -b 4096 -C "saqibnawab823@gmail.com"```
+ you should be able to locate these files but still if you need any help let me know
+
+### for mac
+ 
+ ```ssh-keygen -t rsa -b 4096 -C "your_email@example.com"```
+
+## close using https
+
+ git clone https://gitlab.com/helal-kredi/inlightsassessment.git
+
 ### Setting up frontend
 1. Navigate to the frontend directory:
 ```cd frontend```
@@ -13,8 +32,8 @@ We provide automation solutions for multiple industries. Currently working on de
 
 ### Setting up backend
 1. Navigate to the backend directory:
-```cd ..
-cd backend```
+```cd..```
+```cd backend```
 
 2. Install modules:
 ```npm i```
